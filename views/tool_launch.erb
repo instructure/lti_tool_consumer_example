@@ -1,0 +1,33 @@
+<html>
+<head><title>Launching LTI Tool</title></head>
+<body>
+<div id="ltiLaunchFormSubmitArea">
+
+  <table>
+    <tr>
+      <td colspan="2">Launch Parameters</td>
+    </tr>
+    <% @consumer.generate_launch_data.each_pair do |key, val| %>
+      <tr>
+        <td><%= key %></td>
+        <td><%= val %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <form action="<%= @consumer.launch_url %>" name="ltiLaunchForm" id="ltiLaunchForm" method="post" encType="application/x-www-form-urlencoded">
+    <% @consumer.generate_launch_data.each_pair do |key, val| %>
+      <input type="hidden" name="<%= key %>" value="<%= val %>"/>
+    <% end %>
+    <button type="submit">Launch the tool</button>
+  </form>
+
+</div>
+<% if @autolaunch %>
+  <script language="javascript">
+    document.getElementById("ltiLaunchFormSubmitArea").style.display = "none";
+    document.ltiLaunchForm.submit();
+  </script>
+<% end %>
+</body>
+</html>

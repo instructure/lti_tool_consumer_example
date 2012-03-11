@@ -1,0 +1,13 @@
+<html>
+<head><title>Return to TC</title></head>
+<body>
+  <p>Welcome back to the tool consumer demo app</p>
+  <% if @message %>
+    <p>Message from TP: <%= @message %></p>
+  <% end %>
+  <% if @error_message %>
+    <p>Error from TP: <%= @error_message %></p>
+  <% end %>
+<p><a href="/tool_config">Launch another tool</a></p>
+</body>
+</html>

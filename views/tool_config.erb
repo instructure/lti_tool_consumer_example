@@ -1,0 +1,46 @@
+<html>
+<head><title>Configure a Tool Provider</title></head>
+<body>
+<style type="text/css">
+  input {
+    width: 30em;
+  }
+</style>
+
+<h1>Tool Provider Configuration</h1>
+<p>Hey <%= @username %>, let's launch a Tool Provider!</p>
+<% if @message %>
+  <p style="color: #ff3d23;"><%= @message %></p>
+<% end %>
+<form action="/tool_launch" method="post">
+  <table>
+    <tr>
+      <td>Tool Name</td>
+      <td><input name="tool_name" type="text" value="Test Sinatra App"/></td>
+    </tr>
+    <tr>
+      <td>Consumer Key</td>
+      <td><input name="consumer_key" type="text" value="test"/></td>
+    </tr>
+    <tr>
+      <td>Consumer Secret</td>
+      <td><input name="consumer_secret" type="text" value="secret"/></td>
+    </tr>
+    <tr>
+      <td>Launch URL</td>
+      <td><input name="launch_url" type="text" value="http://localhost:9393/lti_tool"/></td>
+    </tr>
+    <tr>
+      <td>Launch as assignment</td>
+      <td><input type="checkbox" name="assignment" checked="checked"></td>
+    </tr>
+    <tr>
+      <td>Launch automatically</td>
+      <td><input type="checkbox" name="autolaunch" checked="checked"></td>
+    </tr>
+  </table>
+
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>
