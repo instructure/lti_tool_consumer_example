@@ -81,10 +81,19 @@ post '/grade_passback' do
   req = IMS::LTI::OutcomeRequest.from_post_request(request)
   sourcedid = req.lis_result_sourcedid
 
-  # todo - create some key management system
+  # todo - create some simple key management system
   consumer = IMS::LTI::ToolConsumer.new('test', 'secret')
 
   if consumer.valid_request?(request)
+    if consumer.request_oauth_timestamp.to_i - Time.now.utc.to_i > 60*60
+      throw_oauth_error
+    end
+    # this isn't actually checking anything like it should, just want people
+    # implementing real tools to be aware they need to check the nonce
+    if was_nonce_used_in_last_x_minutes?(consumer.request_oauth_nonce, 60)
+      throw_oauth_error
+    end
+
     res = IMS::LTI::OutcomeResponse.new
     res.message_ref_identifier = req.message_identifier
     res.operation = req.operation
@@ -107,7 +116,16 @@ post '/grade_passback' do
     headers 'Content-Type' => 'text/xml'
     res.generate_response_xml
   else
-    response['WWW-Authenticate'] = "OAuth realm=\"http://#{request.env['HTTP_HOST']}\""
-    throw(:halt, [401, "Not authorized\n"])
+    throw_oauth_error
   end
+end
+
+def throw_oauth_error
+  response['WWW-Authenticate'] = "OAuth realm=\"http://#{request.env['HTTP_HOST']}\""
+  throw(:halt, [401, "Not authorized\n"])
+end
+
+def was_nonce_used_in_last_x_minutes?(nonce, minutes=60)
+  # some kind of caching solution or something to keep a short-term memory of used nonces
+  false
 end
