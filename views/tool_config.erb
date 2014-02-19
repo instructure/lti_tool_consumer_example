@@ -3,7 +3,7 @@
 <body>
 <style type="text/css">
   input {
-    width: 30em;
+    width: 45em;
   }
 </style>
 
@@ -16,20 +16,30 @@
   <table>
     <tr>
       <td>Tool Name</td>
-      <td><input name="tool_name" type="text" value="Test Sinatra App"/></td>
+      <td><input name="tool_name" type="text" value="test engrade"/></td>
     </tr>
     <tr>
       <td>Consumer Key</td>
-      <td><input name="consumer_key" type="text" value="test"/></td>
+      <td><input name="consumer_key" type="text" value="speakez_key"/></td>
     </tr>
     <tr>
       <td>Consumer Secret</td>
-      <td><input name="consumer_secret" type="text" value="secret"/></td>
+      <td><input name="consumer_secret" type="text" value="speakez_secret"/></td>
     </tr>
     <tr>
-      <td>Launch URL</td>
-      <td><input name="launch_url" type="text" value="http://localhost:9393/lti_tool"/></td>
+      <td>lms provider url(eg cap activity)</td>
+      <td>
+        <input name="launch_url" type="text"
+               value="http://localhost:3000/activity_lists/1/activities/south-america-puzzle?custom_course_id=1&html5=1"/>
+      </td>
     </tr>
+
+    <tr>
+      <td>Tool consumer info product family code (eg engrade, blackboard...)</td>
+      <td><input name="tool_consumer_info_product_family_code" type="text" value="engrade"/></td>
+    </tr>
+
+
     <tr>
       <td>Launch as assignment</td>
       <td><input type="checkbox" name="assignment" checked="checked"></td>
