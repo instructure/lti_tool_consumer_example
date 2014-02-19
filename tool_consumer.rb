@@ -52,6 +52,8 @@ post '/tool_launch' do
   @consumer.context_title = "Example Sinatra Tool Consumer"
   @consumer.tool_consumer_instance_name = "Frankie"
 
+  @consumer.tool_consumer_info_product_family_code = params[:tool_consumer_info_product_family_code]
+
   if params['assignment']
     @consumer.lis_outcome_service_url = host + '/grade_passback'
     @consumer.lis_result_sourcedid = "oi"
