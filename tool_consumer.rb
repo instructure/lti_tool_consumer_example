@@ -29,6 +29,8 @@ get '/tool_config' do
 end
 
 post '/tool_launch' do
+  puts "\n\n\n\n*** tool launch"
+
   if %w{tool_name launch_url consumer_key consumer_secret}.any?{|k|params[k].nil? || params[k] == ''}
     redirect to('/tool_config?message=Please%20set%20all%20values')
     return
@@ -53,6 +55,7 @@ post '/tool_launch' do
   @consumer.tool_consumer_instance_name = "Frankie"
 
   @consumer.tool_consumer_info_product_family_code = params[:tool_consumer_info_product_family_code]
+  @consumer.resource_link_id = params[:resource_link_id]
 
   if params['assignment']
     @consumer.lis_outcome_service_url = host + '/grade_passback'
@@ -65,6 +68,7 @@ post '/tool_launch' do
 end
 
 get '/tool_return' do
+  puts "tool return"
   @error_message = params['lti_errormsg']
   @message = params['lti_msg']
   puts "Warning: #{params['lti_errorlog']}" if params['lti_errorlog']
@@ -74,6 +78,10 @@ get '/tool_return' do
 end
 
 post '/grade_passback' do
+
+  puts "grade passback"
+  #debugger
+
   # Need to find the consumer key/secret to verify the post request
   # If your return url has an identifier for a specific tool you can use that
   # Or you can grab the consumer_key out of the HTTP_AUTHORIZATION and look up the secret
@@ -81,12 +89,16 @@ post '/grade_passback' do
   # was set at launch time and look up the tool using that somehow.
 
   req = IMS::LTI::OutcomeRequest.from_post_request(request)
+  puts "got req #{req}"
   sourcedid = req.lis_result_sourcedid
 
   # todo - create some simple key management system
-  consumer = IMS::LTI::ToolConsumer.new('test', 'secret')
+  consumer = IMS::LTI::ToolConsumer.new('speakez_test', 'speakez_secret')
+
+  puts "consumer valid request? #{consumer.valid_request?(request)}"
 
   if consumer.valid_request?(request)
+    puts "valid"
     if consumer.request_oauth_timestamp.to_i - Time.now.utc.to_i > 60*60
       throw_oauth_error
     end
@@ -102,6 +114,9 @@ post '/grade_passback' do
     res.code_major = 'success'
     res.severity = 'status'
 
+
+    puts "\ngot score #{req.score}\n"
+
     if req.replace_request?
       res.description = "Your old score of 0 has been replaced with #{req.score}"
     elsif req.read_request?
@@ -116,13 +131,17 @@ post '/grade_passback' do
     end
 
     headers 'Content-Type' => 'text/xml'
-    res.generate_response_xml
+    s = res.generate_response_xml
+    puts "response "+s
+    s
   else
     throw_oauth_error
   end
 end
 
 def throw_oauth_error
+  puts "\noauth error\n\n"
+  Kernel.caller().each { |l| puts l}
   response['WWW-Authenticate'] = "OAuth realm=\"http://#{request.env['HTTP_HOST']}\""
   throw(:halt, [401, "Not authorized\n"])
 end
