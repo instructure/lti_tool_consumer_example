@@ -8,6 +8,20 @@
   <% if @error_message %>
     <p>Error from TP: <%= @error_message %></p>
   <% end %>
+
+  <h2>return parameters</h2>
+  <table>
+    <tr>
+      <td colspan="2">Return Parameters</td>
+    </tr>
+    <% @params.each_pair do |key, val| %>
+      <tr>
+        <td><%= key %></td>
+        <td><%= val %></td>
+      </tr>
+    <% end %>
+  </table>
+
 <p><a href="/tool_config">Launch another tool</a></p>
 </body>
 </html>

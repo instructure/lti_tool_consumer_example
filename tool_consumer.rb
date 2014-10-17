@@ -73,11 +73,20 @@ mediaType\":\"application/zip\", \"title\":\"Cool Course\"}}]}")
 end
 
 get '/tool_return' do
+  tool_return
+end
+
+post '/tool_return' do
+  tool_return
+end
+
+def tool_return
   @error_message = params['lti_errormsg']
   @message = params['lti_msg']
   puts "Warning: #{params['lti_errorlog']}" if params['lti_errorlog']
   puts "Info: #{params['lti_log']}" if params['lti_log']
 
+  @params = params
   erb :tool_return
 end
 
