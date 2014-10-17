@@ -40,17 +40,26 @@ post '/tool_launch' do
   @consumer.launch_presentation_return_url = host + '/tool_return'
   @consumer.lis_person_name_given = params['username']
   @consumer.user_id = Digest::MD5.hexdigest(params['username'])
-  @consumer.roles = "urn:lti:instrole:ims/lis/Instructor"
+  @consumer.roles = "Instructor"
   @consumer.context_id = "bestcourseever"
   @consumer.context_title = "Example Sinatra Tool Consumer"
   @consumer.tool_consumer_instance_name = "Frankie"
   @consumer.tool_consumer_instance_guid = params['tool_consumer_instance_guid'] || "wut.testing.com"
+  @consumer.tool_consumer_info_product_family_code = params['tool_consumer_info_product_family_code'] || 'testthingy'
   @consumer.set_custom_param('lis_person_contact_email_primary', 'oi@wut.testing.com')
   @consumer.lti_message_type = params['lti_message_type']
+
   if @consumer.lti_message_type == 'ContentItemSelectionResponse'
     @consumer.set_non_spec_param('content_items', "{\"@context\":\"http://purl.imsglobal.org/ctx/lti/v1/ContentItemPlacement\", \"@graph\":[{\"@ty
 pe\":\"ContentItemPlacement\", \"placementOf\":{\"@id\":\"https://example.com/remote_file.imscc\", \"@type\":\"FileItem\", \"
 mediaType\":\"application/zip\", \"title\":\"Cool Course\"}}]}")
+  end
+
+  if @consumer.lti_message_type == 'ContentItemSelectionRequest'
+    @consumer.set_non_spec_param('accept_media_types', 'application/zip')
+    @consumer.set_non_spec_param('accept_presentation_document_targets', '')
+    @consumer.set_non_spec_param('content_item_return_url', @consumer.launch_presentation_return_url)
+    @consumer.set_non_spec_param('accept_copy_advice', 'true')
   end
 
   if params['assignment']
