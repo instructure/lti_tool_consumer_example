@@ -8,15 +8,32 @@
 </style>
 
 <h1>Tool Provider Configuration</h1>
-<p>Hey <%= @username %>, let's launch a Tool Provider!</p>
 <% if @message %>
   <p style="color: #ff3d23;"><%= @message %></p>
 <% end %>
 <form action="/tool_launch" method="post">
   <table>
     <tr>
+      <td>Message Type</td>
+      <td>
+        <select name="lti_message_type">
+          <option value="basic-lti-launch-request">basic-lti-launch-request</option>
+          <option value="ContentItemSelectionResponse">ContentItemSelectionResponse</option>
+          <option value="ContentItemSelectionRequest">ContentItemSelectionRequest</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
       <td>Tool Name</td>
       <td><input name="tool_name" type="text" value="Test Sinatra App"/></td>
+    </tr>
+    <tr>
+      <td>User Name</td>
+      <td><input name="username" type="text" value="Bob"/></td>
+    </tr>
+    <tr>
+      <td>tool_consumer_instance_guid</td>
+      <td><input name="tool_consumer_instance_guid" type="text" value="617668138d6042258b7f2fb0b9d89e43"/></td>
     </tr>
     <tr>
       <td>Consumer Key</td>
@@ -24,19 +41,19 @@
     </tr>
     <tr>
       <td>Consumer Secret</td>
-      <td><input name="consumer_secret" type="text" value="secret"/></td>
+      <td><input name="consumer_secret" type="text" value="16a9f517-2775-4a66-8880-f74ccb8f86a7"/></td>
     </tr>
     <tr>
       <td>Launch URL</td>
-      <td><input name="launch_url" type="text" value="http://localhost:9393/lti_tool"/></td>
+      <td><input name="launch_url" type="text" value="http://10.0.10.60:3000/api/v1/lti/search"/></td>
     </tr>
     <tr>
       <td>Launch as assignment</td>
-      <td><input type="checkbox" name="assignment" checked="checked"></td>
+      <td><input type="checkbox" name="assignment"></td>
     </tr>
     <tr>
       <td>Launch automatically</td>
-      <td><input type="checkbox" name="autolaunch" checked="checked"></td>
+      <td><input type="checkbox" name="autolaunch"></td>
     </tr>
   </table>
 

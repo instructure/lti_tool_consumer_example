@@ -8,8 +8,7 @@ require 'pp'
 enable :sessions
 
 get '/' do
-  session['username'] = nil
-  erb :index
+  redirect to('/tool_config')
 end
 
 post '/set_name' do
@@ -18,13 +17,7 @@ post '/set_name' do
 end
 
 get '/tool_config' do
-  unless session['username']
-    redirect to('/')
-    return
-  end
-
   @message = params['message']
-  @username = session['username']
   erb :tool_config
 end
 
@@ -45,12 +38,20 @@ post '/tool_launch' do
   # Only this first one is required, the rest are recommended
   @consumer.resource_link_id = "thisisuniquetome"
   @consumer.launch_presentation_return_url = host + '/tool_return'
-  @consumer.lis_person_name_given = session['username']
-  @consumer.user_id = Digest::MD5.hexdigest(session['username'])
-  @consumer.roles = "learner"
+  @consumer.lis_person_name_given = params['username']
+  @consumer.user_id = Digest::MD5.hexdigest(params['username'])
+  @consumer.roles = "urn:lti:instrole:ims/lis/Instructor"
   @consumer.context_id = "bestcourseever"
   @consumer.context_title = "Example Sinatra Tool Consumer"
   @consumer.tool_consumer_instance_name = "Frankie"
+  @consumer.tool_consumer_instance_guid = params['tool_consumer_instance_guid'] || "wut.testing.com"
+  @consumer.set_custom_param('lis_person_contact_email_primary', 'oi@wut.testing.com')
+  @consumer.lti_message_type = params['lti_message_type']
+  if @consumer.lti_message_type == 'ContentItemSelectionResponse'
+    @consumer.set_non_spec_param('content_items', "{\"@context\":\"http://purl.imsglobal.org/ctx/lti/v1/ContentItemPlacement\", \"@graph\":[{\"@ty
+pe\":\"ContentItemPlacement\", \"placementOf\":{\"@id\":\"https://example.com/remote_file.imscc\", \"@type\":\"FileItem\", \"
+mediaType\":\"application/zip\", \"title\":\"Cool Course\"}}]}")
+  end
 
   if params['assignment']
     @consumer.lis_outcome_service_url = host + '/grade_passback'
