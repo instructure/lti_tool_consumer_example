@@ -1,4 +1,4 @@
-# Example LTI Tool Consumer Using imt-lti Gem
+# Example LTI Tool Consumer Using ims-lti Gem
 
 This is a basic and simple LTI Tool Consumer that uses the
 [ims-lti](https://github.com/instructure/ims-lti) gem.
